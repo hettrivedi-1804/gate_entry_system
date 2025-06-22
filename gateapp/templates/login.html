@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <!-- Add Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://staticimg.amarujala.com/assets/images/2021/07/12/l_1626111836.jpeg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .form-control::placeholder {
+            color: #1e293b;
+            opacity: 0.7;
+        }
+
+        .btn-primary {
+            background-color: #4a90e2;
+            border-color: #4a90e2;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #357ab8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="login-container p-8 w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <!-- Render form fields with Tailwind classes -->
+            <div class="space-y-2">
+                {{ form.username.label_tag }}
+                <br>
+                {{ form.username }}
+            </div>
+            <div class="space-y-2">
+                {{ form.password.label_tag }}
+                <br>
+                {{ form.password }}
+            </div>
+            <button type="submit"
+                    class="w-full btn-primary text-white px-4 py-2">
+                Login
+            </button>
+        </form>
+    </div>
+</body>
+</html>

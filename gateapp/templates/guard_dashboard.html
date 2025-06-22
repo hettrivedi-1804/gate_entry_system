@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://staticimg.amarujala.com/assets/images/2021/07/12/l_1626111836.jpeg?w=750') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .admin-container {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #1e293b;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        .form-container {
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        .form-control {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Admin Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="?page=add_guard">Add Guard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="?page=guard_list">Guard List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="?page=visitor_list">Visitor List</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Section -->
+    <div class="container mt-5">
+        {% if request.GET.page == "add_guard" or request.GET.page == None %}
+        <div class="form-container text-center">
+            <h2 class="text-2xl font-bold mb-4">Welcome, Admin</h2>
+            <h3 class="text-xl font-semibold mb-3">Add New Guard</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="text" name="username" placeholder="Username" required class="form-control">
+                </div>
+                <div class="mb-3">
+                    <input type="password" name="password" placeholder="Password" required class="form-control">
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="name" placeholder="Guard Name" required class="form-control">
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="phone" placeholder="Phone Number" required class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Add Guard</button>
+            </form>
+        </div>
+        {% elif request.GET.page == "guard_list" %}
+        <div class="admin-container">
+            <h2 class="text-2xl font-bold mb-4">Guard List</h2>
+            <ul class="list-group">
+                {% for guard in guards %}
+                    <li class="list-group-item">{{ guard.name }} - 📞 {{ guard.phone }}</li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No guards added yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% elif request.GET.page == "visitor_list" %}
+        <div class="admin-container">
+            <h2 class="text-2xl font-bold mb-4">Visitor List</h2>
+            <ul class="list-group">
+                {% for visitor in visitors %}
+                    <li class="list-group-item">
+                        <strong>{{ visitor.name }}</strong> - {{ visitor.purpose }}  
+                        <br>📅 Entry: {{ visitor.entry_time|date:"d M Y, H:i" }}
+                        <br>📞 Mobile: {{ visitor.mobile_number|default:"Not provided" }}
+                        <br>⏳ Exit (Auto-Set): {{ visitor.exit_time|date:"d M Y, H:i" }}
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No visitors yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

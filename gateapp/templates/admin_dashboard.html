@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <!-- Add Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Add Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://staticimg.amarujala.com/assets/images/2021/07/12/l_1626111836.jpeg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .admin-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .list-group-item.guard-item {
+            background: rgba(0, 123, 255, 0.3);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: #004085;
+            border: none;
+        }
+        .list-group-item.visitor-item {
+            background: rgba(40, 167, 69, 0.3);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: #155724;
+            border: none;
+        }
+        .btn-primary {
+            background-color: #4a90e2;
+            border-color: #4a90e2;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+        }
+        .form-control {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+        .form-control::placeholder {
+            color: #333;
+        }
+    </style>
+</head>
+<body class="p-6">
+    <div class="container max-w-4xl mx-auto p-8 admin-container">
+        <h2 class="text-2xl font-bold mb-4 text-center">Welcome, Admin</h2>
+        
+        <!-- Add New Guard Form -->
+        <h3 class="text-xl font-semibold mb-3">Add New Guard</h3>
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="text" name="username" placeholder="Username" required class="form-control">
+            </div>
+            <div class="mb-3">
+                <input type="password" name="password" placeholder="Password" required class="form-control">
+            </div>
+            <div class="mb-3">
+                <input type="text" name="name" placeholder="Guard Name" required class="form-control">
+            </div>
+            <div class="mb-3">
+                <input type="text" name="phone" placeholder="Phone Number" required class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Add Guard</button>
+        </form>
+        
+        <!-- Guards List -->
+        <h3 class="text-xl font-semibold mb-3">Guards</h3>
+        <ul class="list-group mb-4">
+            {% for guard in guards %}
+                <li class="list-group-item guard-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>👮🏻 Name: {{ guard.name }}</strong><br>
+                        🕻 Phone: {{ guard.phone }}<br>
+                        (Username: {{ guard.user.username }})
+                    </div>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">No guards yet.</li>
+            {% endfor %}
+        </ul>
+        
+        <!-- All Visitors List -->
+        <h3 class="text-xl font-semibold mb-3">All Visitors</h3>
+        <ul class="list-group mb-4">
+            {% for visitor in visitors %}
+                <li class="list-group-item visitor-item">
+                    <strong>👨‍💼 Name: {{ visitor.name }}</strong><br>
+                    📝 Purpose: {{ visitor.purpose }}<br>
+                    📅 Entry: {{ visitor.entry_time|date:"d M Y, H:i" }}<br>
+                    📞 Mobile: {{ visitor.mobile_number|default:"Not provided" }}<br>
+                    ⏳ Exit (Auto-Set): {{ visitor.exit_time|date:"d M Y, H:i" }}<br>
+                    <span class="text-primary">(Entered by: {{ visitor.recorded_by.name }})</span>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">No visitors yet.</li>
+            {% endfor %}
+        </ul>
+        
+        <!-- Logout Form -->
+        <form method="post" action="{% url 'logout' %}" class="text-center">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger w-100">Logout</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
